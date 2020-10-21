@@ -127,5 +127,75 @@ var_xtotal # variancia do estimador do total no plano AASsr
 cov_xtotal <- sqrt(var_xtotal) / x_total * 100
 cov_xtotal # coeficiente de variacao do estimador do total
 
+rm(list = ls())
+
+# 4 ) #####
+N <- 14848
+n <- 30
+amostra <- c(
+  5, 6, 3, 3, 2, 3, 3, 3, 4, 4,
+  3, 2, 7, 4, 3, 5, 4, 4, 3, 3,
+  4, 3, 3, 1, 2, 4, 3, 4, 2, 4
+)
+sum_xi <- sum(amostra)
+sum_xi2 <- sum(amostra^2)
+
+# a
+x_barra <- sum_xi / n # estimador da media populacional
+s2 <- (sum_xi2 / n - (sum_xi / n)^2) * n / (n - 1)
+var_xbarra <- (N - n) / (N * n) * s2 # variancia do estimador da media populacional
+
+# b
+z_alfa <- qnorm(.05, lower.tail = F)
+erro_amostral <- z_alfa * sqrt(var_xbarra)
+ic <- c(x_barra - erro_amostral, x_barra + erro_amostral)
+ic # intervalo de confianca para o verdadeiro parametro da media populacional
+# com confianca de 90%
+
+# c
+erro_novo <- erro_amostral / 2
+d2 <- (erro_novo / z_alfa)^2
+n <- N / (d2 * N / s2 + 1)
+
+rm(list = ls())
+
+# 5 ) ####
+n <- 5
+N <- 250
+amostra <- c(12, 100, 120, 48, 60)
+sum_xi <- sum(amostra)
+sum_xi2 <- sum(amostra^2)
+s2 <- (sum_xi2 / n - (sum_xi / n)^2) * n / (n - 1)
+
+# a
+x_barra <- sum_xi / n
+t_chapeu <- N * x_barra
+t_chapeu # estimador do total populacional
+var_tchapeu <- N^2 * (N - n) / (N * n) * (s2)
+cv_tchapeu <- sqrt(var_tchapeu) / t_chapeu
+cv_tchapeu # Coeficiente de variacao de t_chapeu
+z_alfa <- qnorm(0.025, lower.tail = F)
+erro_amostral <- z_alfa * sqrt(t_chapeu)
+ic <- c(t_chapeu - erro_amostral, t_chapeu + erro_amostral)
+ic # Intervalo de confiança para o verdadeiro parametro do total populacional
+
+# b
+erro_novo <- 0.1
+d2 <- (erro_novo / z_alfa)^2
+n <- N / (d2 / (N * s2) + 1)
+
+rm(list = ls())
+
+# 6 ) ####
+n <- 3
+N <- 10
+escola <- tibble(
+  aleatorio = c(0.282, 0.051, 0.490, 0.132, 0.349, 0.114, 0.498, 0.275, 0.651, 0.751),
+  id_escola = 1:10,
+  n_alunos = c(250, 350, 175, 310, 160, 350, 375, 150, 275, 240),
+  n_professores = c(8, 12, 6, 10, 5, 18, 18, 4, 9, 8)
+)
+amostra <- (escola %>% dplyr::arrange(aleatorio))[1:3,]
+
 
 save.image("~/Documentos/Git/aulas_R/amostragem/exercicio1list.RData")
