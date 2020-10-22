@@ -376,6 +376,6 @@ while (i <= length(pop)){
 }
 sum(sort(vetor)*1/16)
 var(pop)*(N-1)/N
-
+rm(list = ls())
 save.image("~/Documentos/Git/aulas_R/amostragem/exercicio1list.RData")
 
